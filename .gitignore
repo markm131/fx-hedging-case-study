@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+.ipynb_checkpoints/
+data/*
+!data/QuantResearch-CaseStudy-MarketData-25.xlsx
+outputs/
+.vscode/
