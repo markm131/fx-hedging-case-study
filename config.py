@@ -25,9 +25,17 @@ N_SIMS = 10_000
 
 # USD yield curve (as of Aug 1, 2025)
 USD_RATES = {
-    0.25: 0.043500,  # DGS3MO
-    1.0: 0.038700,  # DGS1
-    2.0: 0.036900,  # DGS2
-    5.0: 0.037700,  # DGS5
-    10.0: 0.042300,  # DGS10
+    0.25: 0.0435,  # DGS3MO
+    1.0: 0.0387,  # DGS1
+    2.0: 0.0369,  # DGS2
+    5.0: 0.0377,  # DGS5
+    10.0: 0.0423,  # DGS10
+}
+
+EUR_RATES = {
+    0.25: 0.0200,  # 3M - ECB deposit facility rate
+    1.0:  0.0210,  # 1Y
+    2.0:  0.0223,  # 2Y - derived from 10Y/2Y spread
+    5.0:  0.0250,  # 5Y - interpolated
+    10.0: 0.0278,  # 10Y - market data
 }

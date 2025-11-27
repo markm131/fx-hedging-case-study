@@ -1,15 +1,11 @@
 # metrics.py
 
-import numpy as np
 from datetime import date
-from config import ANALYSIS_DATE, N_SIMS, USD_RATES
 
+import numpy as np
 
-def interpolate_rate(maturity: float) -> float:
-    """Interpolate USD rate from yield curve for given maturity in years"""
-    maturities = list(USD_RATES.keys())
-    rates = list(USD_RATES.values())
-    return np.interp(maturity, maturities, rates)
+from config import ANALYSIS_DATE, N_SIMS
+from src.utils import interpolate_rate
 
 
 def calculate_npv(
@@ -55,9 +51,10 @@ def calculate_metrics(npv_distribution: np.ndarray) -> dict[str, float]:
         "cvar_99": calculate_cvar(npv_distribution, 0.99),
     }
 
+
 if __name__ == "__main__":
     from config import CASH_FLOWS  # Only need CASH_FLOWS here
-    
+
     dummy_fx = {
         date(2025, 10, 1): np.random.normal(1.10, 0.05, N_SIMS),  # Just use N_SIMS
         date(2026, 10, 1): np.random.normal(1.12, 0.06, N_SIMS),
@@ -65,10 +62,10 @@ if __name__ == "__main__":
         date(2029, 10, 1): np.random.normal(1.18, 0.08, N_SIMS),
         date(2030, 10, 1): np.random.normal(1.20, 0.09, N_SIMS),
     }
-    
+
     npv_dist = calculate_npv(dummy_fx, CASH_FLOWS)
     metrics = calculate_metrics(npv_dist)
-    
+
     print("NPV Distribution Metrics:")
     for key, value in metrics.items():
         print(f"  {key}: ${value:,.0f}")
