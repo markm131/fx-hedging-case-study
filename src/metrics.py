@@ -4,7 +4,7 @@ from datetime import date
 
 import numpy as np
 
-from config import ANALYSIS_DATE, N_SIMS
+from config import ANALYSIS_DATE, N_SIMS, USD_RATES
 from src.utils import interpolate_rate
 
 
@@ -20,7 +20,7 @@ def calculate_npv(
         usd_amount = eur_amount * fx_rates
 
         years = (cf_date - ANALYSIS_DATE).days / 365.0
-        rate = interpolate_rate(years)  # Get rate for this maturity
+        rate = interpolate_rate(years, USD_RATES)  # Get rate for this maturity
         discount_factor = np.exp(-rate * years)
 
         npv += usd_amount * discount_factor
