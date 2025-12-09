@@ -1,9 +1,6 @@
 # main.py
 
-import pandas as pd
-
-from config import ANALYSIS_DATE, CASH_FLOWS, MARKET_DATA_FILE
-from src.data_loader import load_market_data
+from config import CASH_FLOWS
 from src.hedging import CollarHedge, ForwardHedge, OptionHedge
 from src.metrics import calculate_metrics
 from src.simulation import run_baseline_scenario
@@ -12,16 +9,8 @@ from src.simulation import run_baseline_scenario
 def main():
     print("\nRunning FX hedging analysis...")
 
-    fx_scenarios, unhedged_stats = run_baseline_scenario()
-
-    market_data = load_market_data(MARKET_DATA_FILE)
-    market_snapshot = market_data.loc[pd.Timestamp(ANALYSIS_DATE)]
-    spot_rate = market_snapshot["spot"]
-    atm_vols = {
-        1.0: market_snapshot["vol_1y_atm"] / 100,
-        5.0: market_snapshot["vol_5y_atm"] / 100,
-    }
-
+    fx_scenarios, unhedged_stats, spot_rate, atm_vols = run_baseline_scenario()
+    
     forward_hedge = ForwardHedge(spot_rate, CASH_FLOWS)
     option_hedge = OptionHedge(spot_rate, atm_vols, CASH_FLOWS)
     collar_hedge = CollarHedge(spot_rate, atm_vols, CASH_FLOWS)

@@ -39,3 +39,5 @@ EUR_RATES = {
     5.0:  0.0250,  # 5Y - interpolated
     10.0: 0.0278,  # 10Y - market data
 }
+
+RANDOM_SEED = 42

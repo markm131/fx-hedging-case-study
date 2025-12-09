@@ -46,7 +46,7 @@ class ForwardHedge:
 
         for cf_date, eur_notional in cf_schedule:
             if eur_notional > 0:
-                maturity = (cf_date - ANALYSIS_DATE).days / 365.0
+                maturity = (cf_date - ANALYSIS_DATE).days / 365.25
                 usd_rate = interpolate_rate(maturity, USD_RATES)
                 eur_rate = interpolate_rate(maturity, EUR_RATES)
                 self.locked_rates[cf_date] = spot_rate * np.exp(
@@ -81,7 +81,7 @@ class OptionHedge:
 
         for flow_date, eur_amount in payment_schedule:
             if eur_amount > 0:
-                tenor = (flow_date - ANALYSIS_DATE).days / 365.0
+                tenor = (flow_date - ANALYSIS_DATE).days / 365.25
                 r_usd = interpolate_rate(tenor, USD_RATES)
                 r_eur = interpolate_rate(tenor, EUR_RATES)
                 volatility = self._get_vol(tenor)
@@ -89,7 +89,7 @@ class OptionHedge:
                 option_premium = black_scholes_price(
                     fx_spot, fx_spot, tenor, r_usd, r_eur, volatility, "put"
                 )
-                self.premium_paid += abs(eur_amount) * option_premium
+                self.premium_paid += eur_amount * option_premium
 
     def _get_vol(self, time_to_maturity: float) -> float:
         tenors = list(self.vol_surface.keys())
@@ -111,7 +111,7 @@ class OptionHedge:
             else:
                 usd_proceeds = eur_amount * fx_rates
 
-            tenor = (flow_date - ANALYSIS_DATE).days / 365.0
+            tenor = (flow_date - ANALYSIS_DATE).days / 365.25
             discount_rate = interpolate_rate(tenor, USD_RATES)
             discount_factor = np.exp(-discount_rate * tenor)
 
@@ -140,7 +140,7 @@ class CollarHedge:
 
         for payment_date, notional in cash_flows:
             if notional > 0:
-                years_to_expiry = (payment_date - ANALYSIS_DATE).days / 365.0
+                years_to_expiry = (payment_date - ANALYSIS_DATE).days / 365.25
                 domestic_r = interpolate_rate(years_to_expiry, USD_RATES)
                 foreign_r = interpolate_rate(years_to_expiry, EUR_RATES)
                 implied_vol = self._interpolate_volatility(years_to_expiry)
@@ -187,7 +187,7 @@ class CollarHedge:
             else:
                 usd_converted = notional * scenario_rates
 
-            years_to_expiry = (payment_date - ANALYSIS_DATE).days / 365.0
+            years_to_expiry = (payment_date - ANALYSIS_DATE).days / 365.25
             disc_rate = interpolate_rate(years_to_expiry, USD_RATES)
             pv_factor = np.exp(-disc_rate * years_to_expiry)
 

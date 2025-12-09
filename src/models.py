@@ -3,14 +3,15 @@
 import numpy as np
 from datetime import date
 from scipy.optimize import minimize
-from config import ANALYSIS_DATE, N_SIMS
+from config import ANALYSIS_DATE, N_SIMS, RANDOM_SEED
 
 
 def simulate_heston_paths(spot: float, v0: float, kappa: float, theta: float, 
                           xi: float, rho: float, r_domestic: float, r_foreign: float,
                           years: float, dt: float = 1/252) -> tuple[np.ndarray, np.ndarray]:
     """Simulate FX and variance paths using Heston stochastic volatility model"""
-    
+    rng = np.random.default_rng(RANDOM_SEED)
+
     steps = int(years / dt)
     spot_paths = np.zeros((steps + 1, N_SIMS))
     var_paths = np.zeros((steps + 1, N_SIMS))
@@ -19,8 +20,8 @@ def simulate_heston_paths(spot: float, v0: float, kappa: float, theta: float,
     var_paths[0] = v0
     
     for i in range(1, steps + 1):
-        z1 = np.random.normal(0, 1, N_SIMS)
-        z2 = np.random.normal(0, 1, N_SIMS)
+        z1 = rng.normal(0, 1, N_SIMS)
+        z2 = rng.normal(0, 1, N_SIMS)
         
         dw_spot = z1
         dw_var = rho * z1 + np.sqrt(1 - rho**2) * z2

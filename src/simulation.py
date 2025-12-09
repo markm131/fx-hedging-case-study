@@ -39,7 +39,7 @@ def run_baseline_scenario() -> tuple[dict[date, np.ndarray], dict[str, float]]:
     pv_results = calculate_npv(rate_paths, CASH_FLOWS)
     risk_stats = calculate_metrics(pv_results)
 
-    return rate_paths, risk_stats
+    return rate_paths, risk_stats, current_spot, implied_vols
 
 
 if __name__ == "__main__":
